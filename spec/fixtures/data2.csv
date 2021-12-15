@@ -1,0 +1,4 @@
+money;int;string
+1000.33;1;aaa bbb ccc
+0.001;5;aaaa bbb
+10000.00;13;aa bbbb
