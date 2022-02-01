@@ -24,35 +24,39 @@ module Printer
       end
 
       def call
-        buffer = "+#{'-' * width}+\n"
+        buffer = row_delimiter
         rows.each do |row|
           buffer << row.call
         end
-        buffer << "+#{'-' * width}+"
         buffer
+      end
+
+      def row_delimiter
+        "+#{'-' * width}+\n"
       end
     end
 
     # Table row
     class Row
-      attr_accessor :table, :columns, :columns_width, :height
-
-      delegate :width, to: :table
+      attr_accessor :table, :columns, :height
 
       def initialize(row, table)
         @table = table
         width = 0
         @height = 1
-        @columns_width = []
         @columns = row.each_with_index.map do |col, index|
           column = Column.new(col)
-          @columns_width[index] = column.width
+          if !columns_width[index] || columns_width[index] < column.width
+            columns_width[index] = column.width
+          end
           width += column.width
           @height = column.height if @height < column.height
           column
         end
 
-        self.width = row.width if width < row.width
+        width = width + columns_width.length - 1
+
+        table.width = width if table.width < width
       end
 
       def call
@@ -64,6 +68,7 @@ module Printer
           end
           buffer << "\n"
         end
+        buffer << table.row_delimiter
         buffer
       end
 
@@ -71,6 +76,10 @@ module Printer
 
       def column_width(index)
         columns_width[index]
+      end
+
+      def columns_width
+        table.columns_width
       end
     end
 

@@ -14,12 +14,6 @@ describe Printer::IO::Row do
                         "| |bbbb|       |\n" \
                         "| |ccc |       |\n")
     end
-
-    context 'when value is float' do
-      let(:width) { 9 }
-      let(:value) { 1_000.003 }
-      # it { is_expected.to eq(' 1000.003|') }
-    end
   end
 
   describe '#height' do
